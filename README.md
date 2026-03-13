@@ -1,25 +1,27 @@
 # KartontGomla App
 
-## 📌 About Project
-Kartona is a B2B mobile application for wholesale distribution.  
-It allows retailers to browse products in carton / box quantities and place orders .
+## About
+KartontGomla is a wholesale ordering mobile application built for retailers.  
+The app allows shop owners to browse products in carton or box quantities and place orders easily.
 
-## 🚀 Features
-- Browse wholesale products
-- Add to cart
-- Checkout system
-- Location confirmation
-- Image upload in checkout
-- Authentication system
+## Features
+- View wholesale products  
+- Add products to cart  
+- Complete checkout process  
+- Confirm delivery location on map  
+- Upload store image during checkout  
+- User authentication (login / register)
 
-## 🛠️ Built With
-- Flutter
-- Dart
-- REST API
-- Google Maps
+## Tech Stack
+- Flutter  
+- Dart  
+- REST APIs  
+- Google Maps  
 
-## 🔗 Links
+## Links
+- Android: https://play.google.com/store/apps/details?id=com.kartont.gomla  
+- iOS: https://apps.apple.com/us/app/id6759520885  
+- Website: https://kartontgomla.com/
 
-- 📱 [Download Android App](https://play.google.com/store/apps/details?id=com.kartont.gomla)  
-- 🍎 [Download iOS App](https://apps.apple.com/us/app/id6759520885)  
-- 🌐 [Visit Website](https://apps.apple.com/us/app/id6759520885)
+## Notes
+This project is under continuous development and improvements are being added regularly.
