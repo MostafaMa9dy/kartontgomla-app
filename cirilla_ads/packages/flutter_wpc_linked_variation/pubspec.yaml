@@ -1,0 +1,25 @@
+name: flutter_wpc_linked_variation
+description: This extension package allows show WPC linked variation plugin
+version: 1.0.0
+homepage: https://github.com/Sub6Resources/flutter_html
+
+environment:
+  sdk: '>=2.19.0 <4.0.0'
+  flutter: ">=2.2.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  dio: ^5.2.1+1
+  http: ^1.0.0
+  feather_icons: ^1.2.0
+  flutter_spinkit: ^5.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  test: ^1.24.3
+
+flutter:
+  assets:
+    - assets/images/

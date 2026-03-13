@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "17498147672",
+    "project_id": "kartont-gomla",
+    "storage_bucket": "kartont-gomla.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:17498147672:android:5cbd951c3cf6375ce0732d",
+        "android_client_info": {
+          "package_name": "com.kartont.gomla"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "17498147672-c23sgidf07hf08l02ajp07mh4897q15t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kartont.gomla",
+            "certificate_hash": "8a9199e888264c2ca36ab98fc5934ef6b27ef278"
+          }
+        },
+        {
+          "client_id": "17498147672-go9fl6fhd6sfabj6qc20qt10r1gdfk9a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kartont.gomla",
+            "certificate_hash": "e937098e36e408d4ecf613e0c1d3baeafd9ef3c9"
+          }
+        },
+        {
+          "client_id": "17498147672-ud1f0dppgdj42ub69hl0ekt7tb3sp6t4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kartont.gomla",
+            "certificate_hash": "30b1fd95bec08d89a4b920d75cdce8e9e8c5f3ba"
+          }
+        },
+        {
+          "client_id": "17498147672-hel48pju9pkll5f7t50fel41lc3p384s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5KWn-vMh6nKBda58YfeDYnvFmHqvkEPU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "17498147672-hel48pju9pkll5f7t50fel41lc3p384s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

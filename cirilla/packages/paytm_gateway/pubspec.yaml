@@ -1,0 +1,30 @@
+name: paytm_gateway
+description: "A new Flutter package project."
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+version: 0.0.1
+homepage:
+
+environment:
+  sdk: '>=2.19.0 <4.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  paytm_allinonesdk: ^1.2.6
+  payment_base:
+    path: ../payment_base
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter packages.
+flutter:
+
+  assets:
+    - assets/images/
