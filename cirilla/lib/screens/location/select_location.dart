@@ -26,8 +26,6 @@ import 'widgets/item_location.dart';
 import 'widgets/select_near_by_location.dart';
 
 enum _StatusHandlePermission { allowed, needLocationService, needAppLocationPermission }
-bool _permissionGranted = false;
-bool _locationConfirmed = false;
 
 class SelectLocationScreen extends StatefulWidget {
   static const routeName = '/location/select_location';
@@ -64,29 +62,25 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> with AppBar
 
   Place? _place;
 
+  Timer? _debounce;
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _checkPermissionAndInit();
-  }
+   }
 
   Future<void> _checkPermissionAndInit() async {
 
     final status = await _handlePermission();
 
     if (status == _StatusHandlePermission.allowed) {
-
       _permissionGranted = true;
-
-      await _getLocation();   // ⭐ يجيب current location مباشرة
-
     } else {
-
       _permissionGranted = false;
-
-      setState(() {});
-
     }
+
+    setState(() {});
+
   }
 
 
@@ -100,6 +94,8 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> with AppBar
     if (widget.location?.lng == null || widget.location?.lat == null) return;
 
     UserLocation location = widget.location!;
+    _locationConfirmed = true;
+
 
     await controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
       target: LatLng(location.lat ?? initLat, location.lng ?? initLng),
@@ -125,42 +121,76 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> with AppBar
 
   /// Called when camera movement has ended
   Future<void> _onCameraIdle() async {
+
     if (!_listen) {
-      setState(() {
-        _listen = true;
-      });
+      _listen = true;
       return;
     }
 
-    LatLng center = await getCenter();
-    GoogleGeocoding googleGeocoding = GoogleGeocoding(googleMapApiKey);
-    GeocodingResponse? reverse = await googleGeocoding.geocoding.getReverse(LatLon(
-      center.latitude,
-      center.longitude,
-    ));
 
-    Place place = await GooglePlaceApiHelper().getPlaceDetailFromId(queryParameters: {
-      'place_id': reverse?.results?.first.placeId,
-    });
-    _place = place;
-
-    UserLocation location = UserLocation(
-      id: reverse?.results?.first.placeId,
-      lat: center.latitude,
-      lng: center.longitude,
-      address: reverse?.results?.first.formattedAddress,
-      tag: '',
-    );
-
-    if (location.lat != _position.value.lat || location.lng != _position.value.lng) {
-      _position.value = location;
-
-      _locationConfirmed = true;
-
+    /// 🔥 debounce
+    if (_debounce?.isActive ?? false) {
+      _debounce!.cancel();
     }
-  }
 
-  /// Handle search address
+    _debounce = Timer(const Duration(milliseconds: 500), () async {
+
+      /// ⭐ خلي الزرار يقفل أول ما يتحرك
+      _locationConfirmed = false;
+
+      /// ⭐ loading يبدأ
+      _loading = true;
+      setState(() {});
+
+      LatLng center = await getCenter();
+
+      GoogleGeocoding googleGeocoding =
+      GoogleGeocoding(googleMapApiKey);
+
+      GeocodingResponse? reverse =
+      await googleGeocoding.geocoding.getReverse(
+        LatLon(center.latitude, center.longitude),
+      );
+
+      if (!mounted) return;
+
+      if (reverse == null ||
+          reverse.results == null ||
+          reverse.results!.isEmpty) {
+        _loading = false;
+        setState(() {});
+        return;
+      }
+
+      Place place = await GooglePlaceApiHelper()
+          .getPlaceDetailFromId(
+        queryParameters: {
+          'place_id': reverse.results!.first.placeId,
+        },
+      );
+
+      _place = place;
+
+      UserLocation location = UserLocation(
+        id: reverse.results!.first.placeId,
+        lat: center.latitude,
+        lng: center.longitude,
+        address: reverse.results!.first.formattedAddress,
+        tag: '',
+      );
+
+      if (location.lat != _position.value.lat ||
+          location.lng != _position.value.lng) {
+
+        _position.value = location;
+        _locationConfirmed = true;
+      }
+
+      /// ⭐ loading يقفل بعد ما خلصنا
+      _loading = false;
+      setState(() {});
+    });
+  }  /// Handle search address
   ///
   void _onSearch(BuildContext context) async {
     try {
@@ -176,6 +206,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> with AppBar
           setState(() {
             _loading = true;
             _listen = false;
+            _locationConfirmed = false;
           });
 
           Place place = await GooglePlaceApiHelper().getPlaceDetailFromId(queryParameters: {
@@ -279,13 +310,28 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> with AppBar
         break;
       default:
         final position = await Geolocator.getCurrentPosition();
+
         final GoogleMapController controllerMarker = await _controller.future;
-        controllerMarker.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-          bearing: enableBearing,
-          target: LatLng(position.latitude, position.longitude),
-          tilt: enableTilt,
-          zoom: enableZoom,
-        )));
+
+        _locationConfirmed = false;
+
+        /// ⭐ أهم تعديل
+        _listen = true;
+
+        _loading = true;
+        setState(() {});
+
+        await controllerMarker.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              target: LatLng(position.latitude, position.longitude),
+              zoom: enableZoom,
+            ),
+          ),
+        );
+
+        _permissionGranted = true;
+        setState(() {});
     }
 
   }
@@ -336,45 +382,46 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> with AppBar
                 height: 48,
                 padding: paddingHorizontal,
                 child: ElevatedButton(
-                  onPressed: !_loading
+                  onPressed: (!_loading && _permissionGranted && _locationConfirmed)
                       ? () => Navigator.pop(context, {
                             'user_location': _position.value,
                             'place': _place,
                           })
-                      : () => {},
+                      : null,
                   child: Text(translate('select_location_button_select')),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-                child: CirillaTile(
-                  title: Text(
-                    translate('select_location_near_place'),
-                    style: theme.textTheme.titleMedium,
-                  ),
-                  trailing: Icon(
-                    showNearPlace ? FeatherIcons.chevronDown : FeatherIcons.chevronRight,
-                    size: 20,
-                    color: theme.textTheme.titleMedium!.color,
-                  ),
-                  isChevron: false,
-                  isDivider: false,
-                  onTap: () {
-                    _showNearPlace.value = !showNearPlace;
-                  },
-                ),
-              ),
-              showNearPlace
-                  ? Expanded(
-                      child: SingleChildScrollView(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-                        child: ValueListenableBuilder<UserLocation>(
-                          valueListenable: _position,
-                          builder: (_, value, __) => SelectNearByLocation(location: value),
-                        ),
-                      ),
-                    )
-                  : const SizedBox(height: 8),
+              )
+              //   child: CirillaTile(
+              //     title: Text(
+              //       translate('select_location_near_place'),
+              //       style: theme.textTheme.titleMedium,
+              //     ),
+              //     trailing: Icon(
+              //       showNearPlace ? FeatherIcons.chevronDown : FeatherIcons.chevronRight,
+              //       size: 20,
+              //       color: theme.textTheme.titleMedium!.color,
+              //     ),
+              //     isChevron: false,
+              //     isDivider: false,
+              //     onTap: () {
+              //       _showNearPlace.value = !showNearPlace;
+              //     },
+              //   ),
+              // ),
+              // showNearPlace
+              //     ? Expanded(
+              //         child: SingleChildScrollView(
+              //           padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+              //           child: ValueListenableBuilder<UserLocation>(
+              //             valueListenable: _position,
+              //             builder: (_, value, __) => SelectNearByLocation(location: value),
+              //           ),
+              //         ),
+              //       )
+              //     : const SizedBox(height: 8),
             ],
           ),
         ),
@@ -416,7 +463,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> with AppBar
 
   Widget _buildMap() {
     return GoogleMap(
-      mapType: MapType.normal,
+      mapType: MapType.hybrid,
       initialCameraPosition: CameraPosition(
         target: LatLng(_position.value.lat ?? initLat, _position.value.lng ?? initLng),
         zoom: initZoom,
@@ -425,6 +472,10 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> with AppBar
       myLocationButtonEnabled: false,
       onMapCreated: (GoogleMapController controller) {
         _controller.complete(controller);
+        setState(() {
+          _loading = false;
+        });
+        _restoreLocation();
       },
       onCameraIdle: _onCameraIdle,
     );
@@ -443,5 +494,12 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> with AppBar
       padding: paddingVerticalLarge,
       isDivider: false,
     );
+  }
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _position.dispose();
+    _showNearPlace.dispose();
+    super.dispose();
   }
 }

@@ -158,10 +158,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                           title: translate('order_date'),
                           subTitle: formatDate(date: _orderData!.dateCreated!, locate: getLocate(context)),
                         ),
-                        buildItem(
-                            padding: const EdgeInsetsDirectional.only(start: itemPaddingMedium),
-                            title: translate('order_email'),
-                            subTitle: _authStore.user!.userEmail!),
+                        // buildItem(
+                        //     padding: const EdgeInsetsDirectional.only(start: itemPaddingMedium),
+                        //     title: translate('order_email'),
+                        //     subTitle: _authStore.user!.userEmail!),
                         buildItem(
                             padding: const EdgeInsetsDirectional.only(start: itemPaddingMedium),
                             title: translate('order_total'),
@@ -192,7 +192,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                         child: Text(shippingLines.map((e) => e.methodTitle).join(' , '),
                                             style: textTheme.titleSmall)),
                                   ],
-                                  Text(price(_orderData!.shippingTotal), style: textTheme.titleSmall)
+                                //Text(price(_orderData!.shippingTotal), style: textTheme.titleSmall)
                                 ],
                               )
                             ],
@@ -246,18 +246,18 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                       );
                     }),
                   ],
-                  Padding(
-                    padding: const EdgeInsets.only(top: layoutPadding * 2, bottom: itemPaddingMedium),
-                    child: Text(
-                      translate('order_billing_address'),
-                      style: textTheme.titleMedium,
-                    ),
-                  ),
-                  Container(
-                    padding: paddingMedium,
-                    decoration: decoration,
-                    child: OrderBilling(billingData: billingData, style: textTheme.bodyMedium),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.only(top: layoutPadding * 2, bottom: itemPaddingMedium),
+                  //   child: Text(
+                  //     translate('order_billing_address'),
+                  //     style: textTheme.titleMedium,
+                  //   ),
+                  // ),
+                  // Container(
+                  //   padding: paddingMedium,
+                  //   decoration: decoration,
+                  //   child: OrderBilling(billingData: billingData, style: textTheme.bodyMedium),
+                  // ),
                   Padding(
                     padding: const EdgeInsets.only(top: layoutPadding * 2, bottom: itemPaddingMedium),
                     child: Text(
@@ -271,18 +271,18 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                     child: OrderBilling(billingData: shippingData, style: textTheme.bodyMedium),
                   ),
                   const SizedBox(height: layoutPadding * 2),
-                  buildItem(leading: translate('order_shipping'), trailing: price(_orderData!.shippingTotal)),
-                  buildItem(leading: translate('order_shipping_tax'), trailing: price(_orderData!.shippingTax)),
-                  buildItem(leading: translate('order_tax'), trailing: price(_orderData!.cartTax)),
+                  // buildItem(leading: translate('order_shipping'), trailing: price(_orderData!.shippingTotal)),
+                  // buildItem(leading: translate('order_shipping_tax'), trailing: price(_orderData!.shippingTax)),
+                  // buildItem(leading: translate('order_tax'), trailing: price(_orderData!.cartTax)),
                   buildItem(leading: translate('order_discount'), trailing: price(_orderData!.discountTotal)),
-                  buildItem(leading: translate('order_discount_tax'), trailing: price(_orderData!.discountTax)),
+                  // buildItem(leading: translate('order_discount_tax'), trailing: price(_orderData!.discountTax)),
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                     Text(translate('order_total'), style: textTheme.titleSmall),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(price(_orderData!.total), style: textTheme.titleLarge),
-                        Text(translate('order_include'), style: textTheme.labelSmall)
+                        // Text(translate('order_include'), style: textTheme.labelSmall)
                       ],
                     )
                   ]),

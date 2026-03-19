@@ -45,21 +45,21 @@ class AccountScreen extends StatelessWidget with AppBarMixin {
               title: Text(translate('change_password'), style: theme.textTheme.titleSmall),
               onTap: () => Navigator.of(context).pushNamed(ChangePasswordScreen.routeName),
             ),
-            // if (enableAddressBook)
-            //   CirillaTile(
-            //     title: Text(translate('address_book_txt'), style: theme.textTheme.titleSmall),
-            //     onTap: () => Navigator.of(context).pushNamed(AddressBookScreen.routeName),
-            //   )
-            // else ...[
-            //   CirillaTile(
-            //     title: Text(translate('address_billing'), style: theme.textTheme.titleSmall),
-            //     onTap: () => Navigator.of(context).pushNamed(AddressBillingScreen.routeName),
-            //   ),
-            //   CirillaTile(
-            //     title: Text(translate('address_shipping'), style: theme.textTheme.titleSmall),
-            //     onTap: () => Navigator.of(context).pushNamed(AddressShippingScreen.routeName),
-            //   ),
-            // ],
+            if (enableAddressBook)
+              CirillaTile(
+                title: Text(translate('address_book_txt'), style: theme.textTheme.titleSmall),
+                onTap: () => Navigator.of(context).pushNamed(AddressBookScreen.routeName),
+              )
+            else ...[
+              CirillaTile(
+                title: Text(translate('address_billing'), style: theme.textTheme.titleSmall),
+                onTap: () => Navigator.of(context).pushNamed(AddressBillingScreen.routeName),
+              ),
+              CirillaTile(
+                title: Text(translate('address_shipping'), style: theme.textTheme.titleSmall),
+                onTap: () => Navigator.of(context).pushNamed(AddressShippingScreen.routeName),
+              ),
+            ],
             CirillaTile(
               title: Text(translate('delete_account_txt'), style: theme.textTheme.titleSmall),
               onTap: () => Navigator.of(context).pushNamed(DeleteAccountScreen.routeName),

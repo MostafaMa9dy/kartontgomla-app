@@ -267,7 +267,7 @@ class _CheckoutOnePageState extends State<CheckoutOnePage>
             if (addressShipping?.shipping?["shipping_address_2"] is Map)
               ...addressShipping?.shipping?["shipping_address_2"],
             "required": true,
-            //"disabled": false,
+            // "disabled": true,
             "type": "hidden", //sasa
 
           },

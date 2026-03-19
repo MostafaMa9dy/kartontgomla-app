@@ -8,6 +8,7 @@ import 'package:cirilla/constants/constants.dart';
 import 'package:cirilla/mixins/mixins.dart';
 import 'package:cirilla/screens/auth/widgets/verify_code.dart';
 import 'package:cirilla/screens/home/home.dart';
+import 'package:cirilla/screens/profile/address_shipping.dart';
 import 'package:cirilla/store/auth/auth_store.dart';
 import 'package:cirilla/utils/debug.dart';
 
@@ -57,6 +58,8 @@ class _LoginMobileFirebaseState extends State<LoginMobileFirebase> with SnackMix
 
   handleLoginAndRegister(User user) async {
     try {
+      final navigator = Navigator.of(context);
+      
       if (widget.type == "register") {
         await _authStore.registerStore.register({
           'phone': user.phoneNumber,
@@ -67,7 +70,9 @@ class _LoginMobileFirebaseState extends State<LoginMobileFirebase> with SnackMix
         IdTokenResult idTokenResult = await user.getIdTokenResult();
         await _authStore.loginStore.login({'type': 'phone', 'token': idTokenResult.token, 'callback': _callback});
       }
-      if (mounted) Navigator.popUntil(context, ModalRoute.withName(HomeScreen.routeName));
+      
+      navigator.popUntil(ModalRoute.withName(HomeScreen.routeName));
+      navigator.pushNamed(AddressShippingScreen.routeName);
     } catch (e) {
       if (mounted) showError(context, e);
       await _authStore.logout();
